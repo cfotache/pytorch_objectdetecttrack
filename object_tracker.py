@@ -1,5 +1,5 @@
 from models import *
-from util import *
+from utils import *
 
 import os, sys, time, datetime, random
 import torch
@@ -23,7 +23,7 @@ model.load_weights(weights_path)
 model.cuda()
 model.eval()
 
-classes = load_classes(class_path)
+classes = utils.load_classes(class_path)
 Tensor = torch.cuda.FloatTensor
 
 def detect_image(img):
@@ -43,10 +43,10 @@ def detect_image(img):
     # run inference on the model and get detections
     with torch.no_grad():
         detections = model(input_img)
-        detections = non_max_suppression(detections, 80, conf_thres, nms_thres)
+        detections = utils.non_max_suppression(detections, 80, conf_thres, nms_thres)
     return detections[0]
 
-videopath = 'data/video/20101210135305.mp4'
+videopath = '../data/video/overpass.mp4'
 
 import cv2
 from sort import *
