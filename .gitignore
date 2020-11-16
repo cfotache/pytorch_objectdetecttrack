@@ -1,0 +1,72 @@
+#######################
+# Start by ignoring everything, and below we are explicitly saying
+# what to not ignore
+*
+
+#######################
+# List of files with GitHub functionality anywhere in the repo
+# that we do not want to ignore
+
+# These files include GitHub settings
+!.gitignore
+!.gitattributes
+#.io page
+_config.yml
+
+# Keep markdown files used for documentation on GitHub
+!README.md
+!CONTRIBUTING.md
+!LICENSE
+
+#######################
+# For performance reasons, if a folder is already ignored, then
+# GitHub does not check the content for that folder for matches
+# with additional rules. The line below includes folder in the
+# top folder (but not their content), so that anything matching
+# the rules below will still not be ignored.
+!*/
+
+#######################
+# The following file types are code that should always be
+# included no matter where in the DataWork folder they are
+# located unless that folder is explicitly ignored. See example
+# with EncryptedData folder below.
+
+# R
+!/**/*.R
+!/**/*.Rmd
+
+# LaTeX
+!/**/*.tex
+!/**/*.cls
+!/**/*.tff
+
+# Python
+!/**/*.py
+!/**/*.ipynb
+
+# Ignore checkpoits
+.ipynb_checkpoints
+
+# C++
+!/**/*.cpp
+!/**/*.ino
+
+# Bash
+!/**/*.sh
+
+# Plain text
+!/**/*.txt
+
+# Markdown
+!/**/*.md
+
+# Web dev
+!/**/*.html
+!/**/*.css
+!/**/*.js
+
+
+# Keep dockerfiles
+!/**/Dockerfile
+
