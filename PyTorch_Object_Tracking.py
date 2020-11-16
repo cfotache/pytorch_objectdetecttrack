@@ -34,7 +34,9 @@ model.load_weights(weights_path)
 model.cuda()
 model.eval()
 classes = utils.load_classes(class_path)
-Tensor = torch.cuda.FloatTensor
+# Tensor = torch.cuda.FloatTensor
+Tensor = torch.FloatTensor
+
 
 
 # In[ ]:
@@ -64,9 +66,9 @@ def detect_image(img):
 # In[ ]:
 
 
-videopath = '../data/video/overpass.mp4'
+videopath = 'data/16-sample.mp4'
 
-get_ipython().magic('pylab inline')
+# get_ipython().magic('pylab inline')
 import cv2
 from IPython.display import clear_output
 
@@ -84,7 +86,7 @@ for ii in range(40):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     pilimg = Image.fromarray(frame)
     detections = detect_image(pilimg)
-
+    
     img = np.array(pilimg)
     pad_x = max(img.shape[0] - img.shape[1], 0) * (img_size / max(img.shape))
     pad_y = max(img.shape[1] - img.shape[0], 0) * (img_size / max(img.shape))
@@ -92,7 +94,7 @@ for ii in range(40):
     unpad_w = img_size - pad_x
     if detections is not None:
         tracked_objects = mot_tracker.update(detections.cpu())
-
+        
         unique_labels = detections[:, -1].cpu().unique()
         n_cls_preds = len(unique_labels)
         for x1, y1, x2, y2, obj_id, cls_pred in tracked_objects:
@@ -100,23 +102,19 @@ for ii in range(40):
             box_w = int(((x2 - x1) / unpad_w) * img.shape[1])
             y1 = int(((y1 - pad_y // 2) / unpad_h) * img.shape[0])
             x1 = int(((x1 - pad_x // 2) / unpad_w) * img.shape[1])
-
+            
             color = colors[int(obj_id) % len(colors)]
             color = [i * 255 for i in color]
             cls = classes[int(cls_pred)]
             cv2.rectangle(frame, (x1, y1), (x1+box_w, y1+box_h), color, 4)
             cv2.rectangle(frame, (x1, y1-35), (x1+len(cls)*19+60, y1), color, -1)
             cv2.putText(frame, cls + "-" + str(int(obj_id)), (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 3)
+    # Show video
+    cv2.imshow("Video", frame)
+    # Break out by pressing 'q' when window is selected
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-    fig=figure(figsize=(12, 8))
-    title("Video Stream")
-    imshow(frame)
-    show()
-    clear_output(wait=True)
-
-
-# In[ ]:
-
-
-
+# Make sure there are no open graphics devices
+cv2.destroyAllWindows()
 
